@@ -1,55 +1,60 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-
-const Header = (props) => {
-
-  return ( 
-    <h1>{props.course}</h1>
-  )
-}
-
-const Content = (props) => {
-  
+const History = (props) => {
+  if(props.allClicks.length === 0) {
+    //CONDITIONAL RENDERING
+    return (
+      <div>
+        the app is used by pressing the buttons
+      </div>
+    )
+  }
   return (
     <div>
-      <Part part={props.part1} exercise={props.exercises1} />
-      <Part part={props.part2} exercise={props.exercises2} />
-      <Part part={props.part3} exercise={props.exercises3} />
+      button press history: {props.allClicks.join(' ')}
     </div>
   )
 }
 
-
-const Part = (props) => {
- 
-  return (
-    <p>{props.part} {props.exercise}</p>
-  )
-}
-
-
-const Total = (props) => {
-
-  return (
-    <p>Number of exercises {props.exercises1 + props.exercises2 + props.exercises3} </p>
-  )
-}
-
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of a component'
-  const exercises3 = 14
+  const [left, setLeft] = useState(0)
+  const [right, setRight] = useState(0)
+  const [allClicks, setAll] = useState([])
+
+  const handleLeftClick = () => {
+    setAll(allClicks.concat('L'))
+    setLeft(left + 1)
+  }
+  //old code reference
+  // we did not do the following:
+  // const handleLeftClick = () => {
+  //   clicks.left++
+  //   setClicks(clicks)
+  //}
+  //As IT IS FORBIDDEN IN REACT TO MUTATE STATE DIRECTLY!! It can result in
+  //unexpected side effects. Changing state always has to be done by setting the
+  //state to a new object.
+
+  const handleRightClick = () => {
+    setAll(allClicks.concat('R'))
+    setRight(right + 1);
+  }
+  //Don't use .push() method, as this will mutate the original array, and as stated above
+  //WE DO NOT DIRECTLY MUTATE THE STATE.
 
   return (
     <div>
-      <Header course={course} />
-      <Content part1={part1} part2={part2} part3={part3} exercises1={exercises1} exercises2={exercises2} exercises3={exercises3} />
-      <Total exercises1={exercises1} exercises2={exercises2} exercises3={exercises3}/>
+      {left}
+      <Button handleClick={handleLeftClick} text="left" />
+      <Button handleClick={handleRightClick} text="right" />
+      {right}
+      <History allClicks={allClicks} />
     </div>
   )
 }
